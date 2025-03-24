@@ -272,10 +272,12 @@ RetVal<uint64_t> FileSystem::fileSize(const io::path_t& path) const
 
 RetVal<io::paths_t> FileSystem::scanFiles(const io::path_t& rootDir, const std::vector<std::string>& nameFilters, ScanMode mode) const
 {
+    LOGI() << __LINE__ << ", rootDir: " << rootDir << ", mode: " << static_cast<int>(mode);
     RetVal<io::paths_t> result;
     Ret ret = exists(rootDir);
     if (!ret) {
         result.ret = ret;
+        LOGI() << __LINE__ << ", ret: " << ret;
         return result;
     }
 
@@ -300,10 +302,13 @@ RetVal<io::paths_t> FileSystem::scanFiles(const io::path_t& rootDir, const std::
         qnameFilters << QString::fromStdString(f);
     }
 
+    LOGI() << __LINE__ << " filters: " << filters << ", flags: " << flags;
     QDirIterator it(rootDir.toQString(), qnameFilters, filters, flags);
+    LOGI() << __LINE__;
 
     while (it.hasNext()) {
         result.val.push_back(it.next());
+        LOGI() << __LINE__ << ", " << it.filePath();
     }
 
     result.ret = make_ret(Err::NoError);

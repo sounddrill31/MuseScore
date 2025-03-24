@@ -49,8 +49,11 @@ std::map<std::string /*codeKey*/, Uri> ExtPluginsLoader::loadCodekeyUriMap(const
         }
     };
 
+    LOGI() << __LINE__;
     loadUris(data, defPath);
+    LOGI() << __LINE__;
     loadUris(data, extPath);
+    LOGI() << __LINE__;
 
     //! NOTE These plugins have been ported to extensions
     data["colornotes"] = Uri("musescore://extensions/colornotes");
@@ -63,10 +66,13 @@ ManifestList ExtPluginsLoader::loadManifestList(const io::path_t& defPath, const
 {
     TRACEFUNC;
 
-    LOGD() << "try load extensions, def: " << defPath << ", user: " << extPath;
+    LOGI() << "try load extensions, def: " << defPath << ", user: " << extPath;
 
+    LOGI() << __LINE__;
     ManifestList defaultManifests = manifestList(defPath);
+    LOGI() << __LINE__;
     ManifestList externalManifests = manifestList(extPath);
+    LOGI() << __LINE__;
 
     ManifestList retList;
     for (const Manifest& m : defaultManifests) {
@@ -88,6 +94,7 @@ ManifestList ExtPluginsLoader::loadManifestList(const io::path_t& defPath, const
 
 ManifestList ExtPluginsLoader::manifestList(const io::path_t& rootPath) const
 {
+    LOGI() << __LINE__ << ", rootPath: " << rootPath;
     ManifestList manifests;
     io::paths_t paths = qmlsPaths(rootPath);
     for (const io::path_t& path : paths) {
@@ -104,6 +111,7 @@ ManifestList ExtPluginsLoader::manifestList(const io::path_t& rootPath) const
 
 io::paths_t ExtPluginsLoader::qmlsPaths(const io::path_t& rootPath) const
 {
+    LOGI() << __LINE__ << ", rootPath: " << rootPath;
     RetVal<io::paths_t> paths = io::Dir::scanFiles(rootPath, { "*.qml" });
     if (!paths.ret) {
         LOGE() << "failed scan files, err: " << paths.ret.toString()
@@ -115,6 +123,7 @@ io::paths_t ExtPluginsLoader::qmlsPaths(const io::path_t& rootPath) const
 
 Manifest ExtPluginsLoader::parseManifest(const io::path_t& rootPath, const io::path_t& path) const
 {
+    LOGI() << __LINE__ << ", rootPath: " << rootPath << ", path: " << path;
     ByteArray data;
     Ret ret = io::File::readFile(path, data);
     if (!ret) {
@@ -122,6 +131,7 @@ Manifest ExtPluginsLoader::parseManifest(const io::path_t& rootPath, const io::p
         return Manifest();
     }
 
+    LOGI() << __LINE__;
     String content = String::fromUtf8(data);
 
     //! NOTE Check is MuseScore plugin
@@ -146,6 +156,7 @@ Manifest ExtPluginsLoader::parseManifest(const io::path_t& rootPath, const io::p
         }
     }
 
+    LOGI() << __LINE__;
     io::FileInfo fi(path);
 
     Manifest m;
@@ -270,6 +281,7 @@ Manifest ExtPluginsLoader::parseManifest(const io::path_t& rootPath, const io::p
     a.path = fi.fileName();
     m.actions.push_back(std::move(a));
 
+    LOGI() << __LINE__;
     return m;
 }
 

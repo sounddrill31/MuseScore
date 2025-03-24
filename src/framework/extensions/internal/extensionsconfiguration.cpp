@@ -117,11 +117,13 @@ Ret ExtensionsConfiguration::setManifestConfigs(const std::map<Uri, Manifest::Co
 
 std::map<muse::Uri, Manifest::Config> ExtensionsConfiguration::manifestConfigs() const
 {
+    LOGI() << __LINE__;
     const io::path_t configPath = userPath() + "/config.json";
     const io::path_t oldPluginsConfigPath = globalConfiguration()->userAppDataPath() + "/plugins/plugins.json";
 
     //! NOTE Load current config
     if (io::File::exists(configPath)) {
+        LOGI() << __LINE__;
         ByteArray data;
         mi::ReadResourceLockGuard lock_guard(multiInstancesProvider.get(), EXTENSIONS_RESOURCE_NAME);
         Ret ret = io::File::readFile(configPath, data);
@@ -142,6 +144,7 @@ std::map<muse::Uri, Manifest::Config> ExtensionsConfiguration::manifestConfigs()
             return {};
         }
 
+        LOGI() << __LINE__;
         std::map<Uri, Manifest::Config> result;
         JsonArray arr = doc.rootArray();
         for (size_t i = 0; i < arr.size(); ++i) {
@@ -169,10 +172,12 @@ std::map<muse::Uri, Manifest::Config> ExtensionsConfiguration::manifestConfigs()
             result.insert({ uri, c });
         }
 
+        LOGI() << __LINE__;
         return result;
     }
     //! NOTE Load old plugins config
     else {
+        LOGI() << __LINE__;
         ByteArray data;
         mi::ReadResourceLockGuard lock_guard(multiInstancesProvider.get(), EXTENSIONS_RESOURCE_NAME);
         Ret ret = io::File::readFile(oldPluginsConfigPath, data);
@@ -193,12 +198,14 @@ std::map<muse::Uri, Manifest::Config> ExtensionsConfiguration::manifestConfigs()
             return {};
         }
 
+        LOGI() << __LINE__;
         std::map<std::string /*codeKey*/, Uri> uris;
         {
             legacy::ExtPluginsLoader pluginsLoader;
             uris = pluginsLoader.loadCodekeyUriMap(pluginsDefaultPath(), pluginsUserPath());
         }
 
+        LOGI() << __LINE__;
         std::map<Uri, Manifest::Config> result;
         JsonArray arr = doc.rootArray();
         for (size_t i = 0; i < arr.size(); ++i) {
@@ -226,6 +233,7 @@ std::map<muse::Uri, Manifest::Config> ExtensionsConfiguration::manifestConfigs()
             result.insert({ uri, c });
         }
 
+        LOGI() << __LINE__;
         return result;
     }
 }

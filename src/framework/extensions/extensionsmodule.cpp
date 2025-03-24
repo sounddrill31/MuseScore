@@ -135,8 +135,11 @@ void ExtensionsModule::onInit(const IApplication::RunMode& mode)
 
 void ExtensionsModule::onDelayedInit()
 {
+    LOGI() << __LINE__;
     if (!m_extensionsLoaded) {
+        LOGI() << __LINE__;
         m_provider->reloadExtensions();
         m_extensionsLoaded = true;
     }
+    LOGI() << __LINE__;
 }

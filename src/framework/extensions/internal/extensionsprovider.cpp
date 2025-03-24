@@ -50,14 +50,17 @@ KnownCategories ExtensionsProvider::knownCategories() const
 
 void ExtensionsProvider::reloadExtensions()
 {
+    LOGI() << __LINE__;
     ExtensionsLoader loader;
     m_manifests = loader.loadManifestList(configuration()->defaultPath(),
                                           configuration()->userPath());
+    LOGI() << __LINE__;
 
     legacy::ExtPluginsLoader pluginsLoader;
     ManifestList plugins = pluginsLoader.loadManifestList(configuration()->pluginsDefaultPath(),
                                                           configuration()->pluginsUserPath());
 
+    LOGI() << __LINE__;
     muse::join(m_manifests, plugins);
 
     std::map<Uri, Manifest::Config> configs = configuration()->manifestConfigs();
@@ -66,6 +69,7 @@ void ExtensionsProvider::reloadExtensions()
     }
 
     m_manifestListChanged.notify();
+    LOGI() << __LINE__;
 }
 
 ManifestList ExtensionsProvider::manifestList(Filter filter) const

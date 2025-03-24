@@ -40,10 +40,13 @@ ManifestList ExtensionsLoader::loadManifestList(const io::path_t& defPath, const
 {
     TRACEFUNC;
 
-    LOGD() << "try load extensions, def: " << defPath << ", user: " << extPath;
+    LOGI() << "try load extensions, def: " << defPath << ", user: " << extPath;
 
+    LOGI() << __LINE__;
     ManifestList defaultManifests = manifestList(defPath);
+    LOGI() << __LINE__;
     ManifestList externalManifests = manifestList(extPath);
+    LOGI() << __LINE__;
 
     ManifestList retList;
     for (const Manifest& m : defaultManifests) {
@@ -78,12 +81,13 @@ ManifestList ExtensionsLoader::manifestList(const io::path_t& rootPath) const
     ManifestList manifests;
     io::paths_t paths = manifestPaths(rootPath);
     for (const io::path_t& path : paths) {
-        LOGD() << "parsing manifest: " << path;
+        LOGI() << "parsing manifest: " << path;
         Manifest manifest = parseManifest(path);
         resolvePaths(manifest, io::FileInfo(path).dirPath());
         manifests.push_back(manifest);
     }
 
+    LOGI() << __LINE__;
     return manifests;
 }
 

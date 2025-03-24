@@ -241,19 +241,27 @@ void GuiApp::perform()
             // Setup modules: onDelayedInit
             // ====================================================
 
+            LOGI() << "start onDelayedInit global";
             m_globalModule.onDelayedInit();
+            LOGI() << "finish onDelayedInit global";
             for (modularity::IModuleSetup* m : m_modules) {
+                LOGI() << "start onDelayedInit " << m->moduleName();
                 m->onDelayedInit();
+                LOGI() << "finish onDelayedInit " << m->moduleName();
             }
 
+            LOGI() << "start runOnSplashScreen";
             startupScenario()->runOnSplashScreen();
+            LOGI() << "finish runOnSplashScreen";
 
             if (splashScreen) {
                 splashScreen->close();
                 delete splashScreen;
             }
 
+            LOGI() << "start runAfterSplashScreen";
             startupScenario()->runAfterSplashScreen();
+            LOGI() << "finish runAfterSplashScreen";
         }
     }, Qt::QueuedConnection);
 

@@ -39,7 +39,9 @@ static io::paths_t pluginPathsFromDefaultLocation()
     io::paths_t result;
 
     try {
+        LOGI() << __LINE__;
         PluginModule::PathList paths = PluginModule::getModulePaths();
+        LOGI() << __LINE__;
 
         for (const std::string& path : paths) {
             result.push_back(path);
@@ -48,6 +50,7 @@ static io::paths_t pluginPathsFromDefaultLocation()
         LOGE() << "Unable to get module paths";
     }
 
+    LOGI() << __LINE__;
     return result;
 }
 }
@@ -56,26 +59,34 @@ io::paths_t VstPluginsScanner::scanPlugins() const
 {
     TRACEFUNC;
 
+    LOGI() << __LINE__;
     io::paths_t result = pluginPathsFromDefaultLocation();
+    LOGI() << __LINE__;
     io::paths_t plugins = pluginPathsFromCustomLocations(configuration()->userVstDirectories());
+    LOGI() << __LINE__;
     result.insert(result.end(), std::make_move_iterator(plugins.begin()), std::make_move_iterator(plugins.end()));
+    LOGI() << __LINE__;
 
     return result;
 }
 
 io::paths_t VstPluginsScanner::pluginPathsFromCustomLocations(const io::paths_t& customPaths) const
 {
+    LOGI() << __LINE__;
     io::paths_t result;
 
     for (const io::path_t& path : customPaths) {
+        LOGI() << __LINE__;
         RetVal<io::paths_t> paths = fileSystem()->scanFiles(path, { VST3_PACKAGE_FILTER });
         if (!paths.ret) {
             LOGE() << paths.ret.toString();
             continue;
         }
 
+        LOGI() << __LINE__;
         result.insert(result.end(), std::make_move_iterator(paths.val.begin()), std::make_move_iterator(paths.val.end()));
     }
 
+    LOGI() << __LINE__;
     return result;
 }

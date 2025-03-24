@@ -51,27 +51,36 @@ void RegisterAudioPluginsScenario::init()
 
 Ret RegisterAudioPluginsScenario::registerNewPlugins()
 {
+    LOGI() << __LINE__;
     TRACEFUNC;
 
     io::paths_t newPluginPaths;
 
-    for (IAudioPluginsScannerPtr scanner : scannerRegister()->scanners()) {
+    for (const IAudioPluginsScannerPtr &scanner : scannerRegister()->scanners()) {
+        LOGI() << __LINE__;
         io::paths_t paths = scanner->scanPlugins();
 
         for (const io::path_t& path : paths) {
+            LOGI() << __LINE__;
             if (!knownPluginsRegister()->exists(path)) {
+                LOGI() << __LINE__;
                 newPluginPaths.push_back(path);
             }
+            LOGI() << __LINE__;
         }
     }
 
+    LOGI() << __LINE__;
     if (newPluginPaths.empty()) {
         return muse::make_ok();
     }
 
+    LOGI() << __LINE__;
     processPluginsRegistration(newPluginPaths);
 
+    LOGI() << __LINE__;
     Ret ret = knownPluginsRegister()->load();
+    LOGI() << __LINE__;
     return ret;
 }
 

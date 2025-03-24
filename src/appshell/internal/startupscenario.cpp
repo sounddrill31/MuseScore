@@ -87,18 +87,24 @@ void StartupScenario::setStartupScoreFile(const std::optional<project::ProjectFi
 
 void StartupScenario::runOnSplashScreen()
 {
+    LOGI() << __LINE__;
+
     //! NOTE Registering plugins shows a window (dialog) before the main window is shown.
     //! After closing it, the application may in a state where there are no open windows,
     //! which leads to automatic exit from the application.
     //! (Thanks to the splashscreen, but this is not an obvious detail)
     qApp->setQuitLockEnabled(false);
 
+    LOGI() << __LINE__;
+
     Ret ret = registerAudioPluginsScenario()->registerNewPlugins();
     if (!ret) {
         LOGE() << ret.toString();
     }
 
+    LOGI() << __LINE__;
     qApp->setQuitLockEnabled(true);
+    LOGI() << __LINE__;
 }
 
 void StartupScenario::runAfterSplashScreen()

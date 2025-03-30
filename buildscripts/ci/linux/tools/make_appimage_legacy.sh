@@ -4,15 +4,14 @@ trap 'echo Making AppImage failed; exit 1' ERR
 
 INSTALL_DIR="$1" # MuseScore was installed here
 APPIMAGE_NAME="$2" # name for AppImage file (created outside $INSTALL_DIR)
-PACKARCH="$3" # architecture (x86_64, aarch64)
+PACKARCH="$3" # architecture (armv7l)
 
 if [ -z "$INSTALL_DIR" ]; then echo "error: not set INSTALL_DIR"; exit 1; fi
 if [ -z "$APPIMAGE_NAME" ]; then echo "error: not set APPIMAGE_NAME"; exit 1; fi
 if [ -z "$PACKARCH" ]; then 
-  PACKARCH="x86_64"
+  PACKARCH="armhf"
 elif [ "$PACKARCH" == "armv7l" ]; then
-  echo "Run buildscripts/ci/linux/tools/make_appimage_legacy.sh for legacy arm builds"
-  exit 1
+  PACKARCH="armhf"
 fi
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -44,9 +43,7 @@ function extract_appimage()
   local -r appimage="$1" binary_name="$2"
   local -r appdir="${appimage%.AppImage}.AppDir"
   # run appimage in docker container with QEMU emulation directly since binfmt fails
-  if [[ "$PACKARCH" == aarch64 ]]; then
-    /usr/bin/qemu-aarch64-static "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
-  elif [[ "$PACKARCH" == armhf ]]; then
+  if [[ "$PACKARCH" == armhf ]]; then
     /usr/bin/qemu-arm-static "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
   else
     "./${appimage}" --appimage-extract >/dev/null # dest folder "squashfs-root"
@@ -95,7 +92,7 @@ export PATH="$BUILD_TOOLS/linuxdeploy:$PATH"
 linuxdeploy --list-plugins
 
 if [[ ! -d $BUILD_TOOLS/appimageupdatetool ]]; then
-  if [[ "$PACKARCH" == aarch64 ]] || [[ "$PACKARCH" == armhf ]]; then
+  if [[ "$PACKARCH" == armhf ]]; then
     ##########################################################################
     # Compile and install appimageupdatetool
     ##########################################################################
@@ -232,14 +229,7 @@ additional_qt_components=(
 # ADDITIONAL LIBRARIES
 # linuxdeploy may have missed some libraries that we need
 # Report new additions at https://github.com/linuxdeploy/linuxdeploy/issues
-if [[ "$PACKARCH" == "x86_64" ]]; then
-  additional_libraries=(
-    libssl.so.1.1    # OpenSSL (for Save Online)
-    libcrypto.so.1.1 # OpenSSL (for Save Online)
-  )
-else
-  additional_libraries=()
-fi
+additional_libraries=()
 
 # FALLBACK LIBRARIES
 # These get bundled in the AppImage, but are only loaded if the user does not

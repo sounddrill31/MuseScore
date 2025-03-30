@@ -90,7 +90,11 @@ if [ "$PACKTYPE" == "appimage" ]; then
     *) unset UPDATE_INFORMATION;; # disable updates for other build modes
     esac
 
-    bash ./buildscripts/ci/linux/tools/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}"
+    if [ "$PACKARCH" == "armv7l" ]; then
+        bash ./buildscripts/ci/linux/tools/make_appimage_legacy.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}"
+    else
+        bash ./buildscripts/ci/linux/tools/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}"
+    fi
     mv "${INSTALL_DIR}/../${ARTIFACT_NAME}.AppImage" "${ARTIFACTS_DIR}/"
     bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME.AppImage
 
